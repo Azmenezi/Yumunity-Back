@@ -44,7 +44,7 @@ router.post(
   signin
 );
 //validate the user before letting the change happen
-//router.put("/:userId",passport.authenticate("jwt", { session: false }), updateUser);
-//router.delete("/:userId",passport.authenticate("jwt", { session: false }), deleteUser);
+router.put("/:userId",passport.authenticate("jwt", { session: false }), upload.single("image"),inputValidator([...emailValidator, ...passwordValidator], false),hashing,updateUser);
+router.delete("/:userId",passport.authenticate("jwt", { session: false }), deleteUser);
 
 module.exports = router;
