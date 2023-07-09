@@ -5,6 +5,7 @@ const RecipeSchema = new Schema({
   name: { type: String, required: true },
   text: { type: String, required: true },
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
+  categories:[{ type: Schema.Types.ObjectId, ref: "Category" }]
 });
 
 module.exports = model("Recipe", RecipeSchema);
