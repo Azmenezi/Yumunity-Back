@@ -43,7 +43,8 @@ router.post(
   passport.authenticate("local", { session: false }),
   signin
 );
-router.put("/:userId",passport.authenticate("jwt", { session: false }), updateUser);
-router.delete("/:userId",passport.authenticate("jwt", { session: false }), deleteUser);
+//validate the user before letting the change happen
+//router.put("/:userId",passport.authenticate("jwt", { session: false }), updateUser);
+//router.delete("/:userId",passport.authenticate("jwt", { session: false }), deleteUser);
 
 module.exports = router;
