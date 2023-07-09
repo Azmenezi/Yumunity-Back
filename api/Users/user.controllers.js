@@ -55,6 +55,9 @@ exports.signin = async (req, res) => {
 exports.updateUser = async (req, res, next) => {
   try {
     if(!req.user._id.equals(req.foundUser._id)) return next({ status: 400, message: "you dont have the permission to preform this task!" })
+       if (req.file) {
+      req.body.image = `${req.file.path.replace("\\", "/")}`;
+    }
     await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
@@ -64,6 +67,7 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
+    if(!req.user._id.equals(req.foundUser._id)) return next({ status: 400, message: "you dont have the permission to preform this task!" })
     await User.findByIdAndRemove({ _id: req.user.id });
     return res.status(204).end();
   } catch (error) {
