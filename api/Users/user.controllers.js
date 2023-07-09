@@ -15,7 +15,18 @@ exports.getUsers = async (req, res, next) => {
     const users = await User.find().select("-__v -password");
     return res.status(200).json(users);
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
+  }
+};
+
+exports.getProfile = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: req.user._id }).select(
+      "-__v -password"
+    );
+    return res.status(200).json(users);
+  } catch (error) {
+    return next({ status: 400, message: error.message });
   }
 };
 
@@ -28,7 +39,7 @@ exports.signup = async (req, res, next) => {
     const token = generateToken(newUser);
     res.status(201).json({ token });
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
@@ -37,16 +48,17 @@ exports.signin = async (req, res) => {
     const token = generateToken(req.user);
     return res.status(200).json({ token });
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
 exports.updateUser = async (req, res, next) => {
   try {
+    if(!req.user._id.equals(req.foundUser._id)) return next({ status: 400, message: "you dont have the permission to preform this task!" })
     await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
 
@@ -55,6 +67,6 @@ exports.deleteUser = async (req, res, next) => {
     await User.findByIdAndRemove({ _id: req.user.id });
     return res.status(204).end();
   } catch (error) {
-    return next(error);
+    return next({ status: 400, message: error.message });
   }
 };
