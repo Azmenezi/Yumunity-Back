@@ -44,7 +44,7 @@ exports.createRecipe = async (req, res, next) => {
 
 exports.updateRecipe = async (req, res, next) => {
   try {
-    await req.recipe.id.updateOne(req.body);
+    await req.recipe.updateOne(req.body);
     return res.status(204).end();
   } catch (error) {
     return next(error);
@@ -53,7 +53,7 @@ exports.updateRecipe = async (req, res, next) => {
 
 exports.deleteRecipe = async (req, res, next) => {
   try {
-    await req.recipe.id.deleteOne();
+    await req.recipe.deleteOne();
     return res.status(204).end();
   } catch (error) {
     return next(error);
