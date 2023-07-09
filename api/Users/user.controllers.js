@@ -19,6 +19,17 @@ exports.getUsers = async (req, res, next) => {
   }
 };
 
+exports.getProfile = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: req.user._id }).select(
+      "-__v -password"
+    );
+    return res.status(200).json(users);
+  } catch (error) {
+    return next({ status: 400, message: error.message });
+  }
+};
+
 exports.signup = async (req, res, next) => {
   try {
     if (req.file) {
@@ -43,6 +54,7 @@ exports.signin = async (req, res) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
+    if(!req.user.equals())
     await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
