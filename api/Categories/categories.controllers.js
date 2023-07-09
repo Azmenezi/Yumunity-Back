@@ -30,7 +30,7 @@ exports.createCategory = async (req, res, next) => {
 
 exports.updateCategory = async (req, res, next) => {
   try {
-    await req.category.id.updateOne(req.body);
+    await req.category.updateOne(req.body);
     return res.status(204).end();
   } catch (error) {
     return next(error);
@@ -39,7 +39,7 @@ exports.updateCategory = async (req, res, next) => {
 
 exports.deleteCategory = async (req, res, next) => {
   try {
-    await req.category.id.deleteOne();
+    await req.category.deleteOne();
     return res.status(204).end();
   } catch (error) {
     return next(error);
