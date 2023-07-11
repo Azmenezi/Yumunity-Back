@@ -12,7 +12,9 @@ exports.fetchUser = async (userId, next) => {
 
 exports.getUsers = async (req, res, next) => {
   try {
-    const users = await User.find().select("-__v -password");
+    const users = await User.find()
+      .select("-__v -password -email")
+      .populate("recipes", "name");
     return res.status(200).json(users);
   } catch (error) {
     return next({ status: 400, message: error.message });
@@ -54,10 +56,12 @@ exports.signin = async (req, res) => {
 
 exports.updateUser = async (req, res, next) => {
   try {
-    if(!req.user._id.equals(req.foundUser._id)) return next({ status: 400, message: "you dont have the permission to preform this task!" })
-       if (req.file) {
-      req.body.image = `${req.file.path.replace("\\", "/")}`;
-    }
+    if (!req.user._id.equals(req.foundUser._id))
+      return next({
+        status: 400,
+        message: "you dont have the permission to preform this task!",
+      });
+    
     await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
@@ -67,7 +71,11 @@ exports.updateUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
   try {
-    if(!req.user._id.equals(req.foundUser._id)) return next({ status: 400, message: "you dont have the permission to preform this task!" })
+    if (!req.user._id.equals(req.foundUser._id))
+      return next({
+        status: 400,
+        message: "you dont have the permission to preform this task!",
+      });
     await User.findByIdAndRemove({ _id: req.user.id });
     return res.status(204).end();
   } catch (error) {

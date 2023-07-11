@@ -32,7 +32,6 @@ router.param("userId", async (req, res, next, userId) => {
 router.get("/", passport.authenticate("jwt", { session: false }), getUsers);
 router.post(
   "/signup",
-  upload.single("image"),
   inputValidator([...emailValidator, ...passwordValidator], true),
   FieldValidation,
   hashing,
@@ -44,7 +43,7 @@ router.post(
   signin
 );
 //validate the user before letting the change happen
-router.put("/:userId",passport.authenticate("jwt", { session: false }), upload.single("image"),inputValidator([...emailValidator, ...passwordValidator], false),hashing,updateUser);
+router.put("/:userId",passport.authenticate("jwt", { session: false }), inputValidator([...emailValidator, ...passwordValidator], false),hashing,updateUser);
 router.delete("/:userId",passport.authenticate("jwt", { session: false }), deleteUser);
 
 module.exports = router;
