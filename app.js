@@ -8,6 +8,7 @@ const errorHandler = require("./middlewares/errors/errorHandler");
 const userRoutes = require("./api/Users/users.routes");
 const recipeRoutes = require("./api/Recipes/recipes.routes");
 const categoryRoutes = require("./api/Categories/categories.routes");
+const ingredientRoutes = require("./api/Ingredients/ingredients.routes");
 const config = require("./config/keys");
 const path = require("path");
 const passport = require("passport");
@@ -29,6 +30,7 @@ app.use("/media", express.static(path.join(__dirname, "media")));
 app.use("/users", userRoutes);
 app.use("/recipes", recipeRoutes);
 app.use("/categories", categoryRoutes);
+app.use("/ingredients", ingredientRoutes);
 app.use(notFound);
 app.use(errorHandler);
 

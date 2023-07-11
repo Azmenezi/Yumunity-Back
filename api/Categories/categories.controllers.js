@@ -30,20 +30,20 @@ exports.createCategory = async (req, res, next) => {
   }
 };
 
-exports.updateCategory = async (req, res, next) => {
-  try {
-    await req.category.updateOne(req.body);
-    return res.status(204).end();
-  } catch (error) {
-    return next({ status: 400, message: error.message });
-  }
-};
+// exports.updateCategory = async (req, res, next) => {
+//   try {
+//     await req.category.updateOne(req.body);
+//     return res.status(204).end();
+//   } catch (error) {
+//     return next({ status: 400, message: error.message });
+//   }
+// };
 
-exports.deleteCategory = async (req, res, next) => {
-  try {
-    await req.category.deleteOne();
-    return res.status(204).end();
-  } catch (error) {
-    return next({ status: 400, message: error.message });
-  }
-};
+// exports.deleteCategory = async (req, res, next) => {
+//   try {
+//     await req.category.deleteOne();
+//     return res.status(204).end();
+//   } catch (error) {
+//     return next({ status: 400, message: error.message });
+//   }
+// };

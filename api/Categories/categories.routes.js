@@ -27,15 +27,15 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   createCategory
 );
-router.put(
-  "/:categoryId",
-  passport.authenticate("jwt", { session: false }),
-  updateCategory
-);
-router.delete(
-  "/:categoryId",
-  passport.authenticate("jwt", { session: false }),
-  deleteCategory
-);
+// router.put(
+//   "/:categoryId",
+//   passport.authenticate("jwt", { session: false }),
+//   updateCategory
+// );
+// router.delete(
+//   "/:categoryId",
+//   passport.authenticate("jwt", { session: false }),
+//   deleteCategory
+// );
 
 module.exports = router;

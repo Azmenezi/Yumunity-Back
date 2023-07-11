@@ -61,9 +61,7 @@ exports.updateUser = async (req, res, next) => {
         status: 400,
         message: "you dont have the permission to preform this task!",
       });
-    if (req.file) {
-      req.body.image = `${req.file.path.replace("\\", "/")}`;
-    }
+    
     await User.findByIdAndUpdate(req.user.id, req.body);
     return res.status(204).end();
   } catch (error) {
