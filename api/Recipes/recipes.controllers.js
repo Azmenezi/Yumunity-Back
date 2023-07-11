@@ -79,29 +79,52 @@ exports.createRecipe = async (req, res, next) => {
     const newRecipe = await Recipe.create(recipeData);
 
     await req.user.updateOne({ $push: { recipes: newRecipe._id } });
-
-    if (categories?.length > 0) {
-      for (let categoryName of categories) {
-        const foundCategory = await Category.findOneAndUpdate(
-          { name: categoryName.toLowerCase() },
-          { $addToSet: { recipes: newRecipe._id } },
-          { upsert: true, new: true }
-        );
-        await newRecipe.updateOne({ $push: { categories: foundCategory._id } });
+    if (Array.isArray(categories)) {
+      if (categories?.length > 0) {
+        for (let categoryName of categories) {
+          const foundCategory = await Category.findOneAndUpdate(
+            { name: categoryName.toLowerCase() },
+            { $addToSet: { recipes: newRecipe._id } },
+            { upsert: true, new: true }
+          );
+          await newRecipe.updateOne({
+            $push: { categories: foundCategory._id },
+          });
+        }
       }
+    } else {
+      const foundCategory = await Category.findOneAndUpdate(
+        { name: categories.toLowerCase() },
+        { $addToSet: { recipes: newRecipe._id } },
+        { upsert: true, new: true }
+      );
+      await newRecipe.updateOne({
+        $push: { categories: foundCategory._id },
+      });
     }
 
-    if (ingredients?.length > 0) {
-      for (let ingredientName of ingredients) {
-        const foundIngredient = await Ingredient.findOneAndUpdate(
-          { name: ingredientName.toLowerCase() },
-          { $addToSet: { recipes: newRecipe._id } },
-          { upsert: true, new: true }
-        );
-        await newRecipe.updateOne({
-          $push: { ingredients: foundIngredient._id },
-        });
+    if (Array.isArray(ingredients)) {
+      if (ingredients?.length > 0) {
+        for (let ingredientName of ingredients) {
+          const foundIngredient = await Ingredient.findOneAndUpdate(
+            { name: ingredientName.toLowerCase() },
+            { $addToSet: { recipes: newRecipe._id } },
+            { upsert: true, new: true }
+          );
+          await newRecipe.updateOne({
+            $push: { ingredients: foundIngredient._id },
+          });
+        }
       }
+    } else {
+      const foundIngredient = await Ingredient.findOneAndUpdate(
+        { name: ingredients.toLowerCase() },
+        { $addToSet: { recipes: newRecipe._id } },
+        { upsert: true, new: true }
+      );
+      await newRecipe.updateOne({
+        $push: { ingredients: foundIngredient._id },
+      });
     }
 
     return res.status(201).json(newRecipe);
