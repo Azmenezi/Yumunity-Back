@@ -24,9 +24,9 @@ exports.getRecipes = async (req, res, next) => {
 
 exports.getRecipeById = async (req, res, next) => {
   try {
-    const recipes = await Recipe.findOne({ _id: req.recipe._id }).select(
-      "-__v"
-    );
+    const recipes = await Recipe.findOne({ _id: req.recipe._id })
+      .select("-__v")
+      .populate("categories ingredients", "name");
     return res.status(200).json(recipes);
   } catch (error) {
     return next({ status: 400, message: error.message });

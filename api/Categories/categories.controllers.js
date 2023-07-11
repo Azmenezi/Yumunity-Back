@@ -1,5 +1,5 @@
 const Category = require("../../models/Category");
-
+const Recipe = require("../../models/Recipe");
 exports.fetchCategory = async (categoryId, next) => {
   try {
     const category = await Category.findById(categoryId);
@@ -29,7 +29,19 @@ exports.createCategory = async (req, res, next) => {
     return next({ status: 400, message: error.message });
   }
 };
+exports.recipesByCategory = async (req, res, next) => {
+  try {
+    const category = req.category;
 
+    const recipes = await Recipe.find({ categories: category }).populate(
+      "categories"
+    );
+
+    res.status(200).json(recipes);
+  } catch (error) {
+    next(error);
+  }
+};
 // exports.updateCategory = async (req, res, next) => {
 //   try {
 //     await req.category.updateOne(req.body);
