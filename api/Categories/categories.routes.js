@@ -5,6 +5,7 @@ const {
   createCategory,
   updateCategory,
   deleteCategory,
+  recipesByCategory,
 } = require("./categories.controllers");
 const passport = require("passport");
 const router = express.Router();
@@ -21,11 +22,16 @@ router.param("categoryId", async (req, res, next, categoryId) => {
   }
 });
 
-router.get("/", passport.authenticate("jwt", { session: false }), getCategory);
+router.get("/", getCategory);
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   createCategory
+);
+router.get(
+  "/:categoryId",
+
+  recipesByCategory
 );
 // router.put(
 //   "/:categoryId",
