@@ -148,6 +148,7 @@ exports.createRecipe = async (req, res, next) => {
 // };
 exports.updateRecipe = async (req, res, next) => {
   try {
+    console.log(req.body);
     if (!req.user._id.equals(req.recipe.author)) {
       return next({
         status: 400,
@@ -158,12 +159,13 @@ exports.updateRecipe = async (req, res, next) => {
       req.body.image = `${req.file.path.replace("\\", "/")}`;
     }
 
-    if (!req.body.image)
-      return next({ status: 400, message: "no image was uploaded!" });
+    // if (!req.body.image)
+    //   return next({ status: 400, message: "no image was uploaded!" });
 
-    if (req.body.image?.length < 5) {
-      req.body.image = "media/defaultImage.png";
-    }
+    // if (req.body.image?.length < 5) {
+    //   req.body.image = "media/defaultImage.png";
+    // }
+
     const oldRecipe = await Recipe.findById(req.recipe._id).populate(
       "categories ingredients"
     );
@@ -194,21 +196,46 @@ exports.updateRecipe = async (req, res, next) => {
 
     const categoryUpdates = [];
     const ingredientUpdates = [];
-    // Add new categories and ingredients to recipe and recipe to category and ingredient
-    for (let categoryName of categoriesToAdd) {
-      categoryUpdates.push(
-        Category.findOneAndUpdate(
-          { name: categoryName.toLowerCase() },
-          { $addToSet: { recipes: req.recipe._id } },
-          { new: true, upsert: true }
-        )
-      );
-    }
 
-    for (let ingredientName of ingredientsToAdd) {
+    if (Array.isArray(categoriesToAdd)) {
+      if (categoriesToAdd?.length > 0) {
+        // Add new categories and ingredients to recipe and recipe to category and ingredient
+        for (let categoryName of categoriesToAdd) {
+          categoryUpdates.push(
+            Category.findOneAndUpdate(
+              { name: categoryName.toLowerCase() },
+              { $addToSet: { recipes: req.recipe._id } },
+              { new: true, upsert: true }
+            )
+          );
+        }
+      } else if (categoriesToAdd > 0) {
+        console.log(categoriesToAdd);
+        categoryUpdates.push(
+          Category.findOneAndUpdate(
+            { name: categoriesToAdd.toLowerCase() },
+            { $addToSet: { recipes: req.recipe._id } },
+            { new: true, upsert: true }
+          )
+        );
+      }
+    }
+    if (Array.isArray(ingredientsToAdd)) {
+      if (ingredientsToAdd?.length > 0) {
+        for (let ingredientName of ingredientsToAdd) {
+          ingredientUpdates.push(
+            Ingredient.findOneAndUpdate(
+              { name: ingredientName.toLowerCase() },
+              { $addToSet: { recipes: req.recipe._id } },
+              { new: true, upsert: true }
+            )
+          );
+        }
+      }
+    } else if (ingredientsToAdd > 0) {
       ingredientUpdates.push(
         Ingredient.findOneAndUpdate(
-          { name: ingredientName.toLowerCase() },
+          { name: ingredientsToAdd.toLowerCase() },
           { $addToSet: { recipes: req.recipe._id } },
           { new: true, upsert: true }
         )
